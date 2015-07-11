@@ -54,7 +54,7 @@ class EnemyTank :public FTank
 {
 public:
 	//create function...
-	static FTank*  createWithTexture(Texture2D *texture);
+	static EnemyTank*  createWithTexture(Texture2D *texture);
 
 	//tank AI start! it should have it's own mind
 	void		AIStart();
@@ -75,7 +75,7 @@ class PlayerTank :public FTank
 {
 public:
 	//create function...
-	static FTank*  createWithTexture(Texture2D *texture);
+	static PlayerTank*  createWithTexture(Texture2D *texture);
 
 	//attack type , in this way it will be convinient to extends
 	enum class PlayerAction
