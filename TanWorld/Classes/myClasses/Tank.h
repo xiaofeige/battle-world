@@ -29,6 +29,9 @@ public:
 		TD_RIGHT
 	};
 
+	//be attacked
+	void		beAttacked(int damage);
+
 private:
 	FTank();
 	~FTank();
@@ -55,6 +58,7 @@ public:
 
 	//tank AI start! it should have it's own mind
 	void		AIStart();
+
 private:
 	//let constructor and desconstructor be private so that this class 
 	//won't be created unconsitiously
