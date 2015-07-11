@@ -20,9 +20,6 @@ using namespace cocos2d::ui;
 class FTank : public Sprite
 {
 public:
-	//create function...
-	static FTank*  createWithTexture(Texture2D *texture);
-
 	//tank direction definition;
 	enum class TankDirect
 	{
@@ -41,6 +38,7 @@ private:
 
 	int							m_HP;					//blood level
 	int							m_level;				//tank level
+	int							m_damageLevel;			//value of attack
 };
 
 
@@ -52,6 +50,9 @@ private:
 class EnemyTank :public FTank
 {
 public:
+	//create function...
+	static FTank*  createWithTexture(Texture2D *texture);
+
 	//tank AI start! it should have it's own mind
 	void		AIStart();
 private:
@@ -59,7 +60,6 @@ private:
 	//won't be created unconsitiously
 	EnemyTank();
 	~EnemyTank();
-
 
 };
 
@@ -70,11 +70,23 @@ private:
 class PlayerTank :public FTank
 {
 public:
+	//create function...
+	static FTank*  createWithTexture(Texture2D *texture);
+
 	//attack type , in this way it will be convinient to extends
-	enum class AttackType
+	enum class PlayerAction
 	{
-		FIRE_BULLET,
-		FIRE_BOMB
+		PA_FIRE_BULLET,
+		PA_FIRE_BOMB,
+		PA_DEFENCE
+	};
+
+	//playerTank type, it has diffent type with diffent abbility
+	enum class PlayerTankForm
+	{
+		PTF_HEAVY,		//heavy tank which can launch heavy artillery
+		PTF_LIGHT,		//light tank which is faster
+		PTF_LANDMINER	//miner tank which can install landmines
 	};
 
 
@@ -82,12 +94,14 @@ public:
 	void		move(Ref *pSender, Widget::TouchEventType _touchType, FTank::TankDirect _dir);
 
 	//try to attack
-	void		fire(Ref *pSender, Widget::TouchEventType _touchType, PlayerTank::AttackType _attackType);
+	void		act(Ref *pSender, Widget::TouchEventType _touchType, PlayerTank::PlayerAction _playerAction);
 private:
 	PlayerTank();
 	~PlayerTank();
 
-
+	int								m_exp;				//exprence of the player
+	int								m_skillCd[4];		//cd time of  4 skills
+	int								m_transformCD;		//cd time of transform 
 };
 
 #endif  //__FTANK_H__

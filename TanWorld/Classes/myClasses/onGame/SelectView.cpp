@@ -27,7 +27,7 @@ TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
 	if (!cell) {
 		cell = new (std::nothrow) TableViewCell();
 		cell->autorelease();
-		auto sprite = Sprite::create("pic/numView.png"); //¼ÓÔØÂÌÉ«±³¾°
+		auto sprite = Sprite::create("pic/numView.png"); //load background of each cell
 		sprite->setAnchorPoint(Vec2::ZERO);
 		sprite->setPosition(Vec2(0, 0));
 		cell->addChild(sprite);
