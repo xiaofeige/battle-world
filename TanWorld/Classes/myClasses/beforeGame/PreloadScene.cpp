@@ -1,6 +1,8 @@
 #include "PreloadScene.h"
 #include "MainMenu.h"
 #include<thread>
+#include "VisibleRect.h"
+
 USING_NS_CC;
 
 Scene* PreloadScene::createScene()
@@ -28,13 +30,14 @@ bool PreloadScene::init()
 		return false;
 	}
 
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
 	//3 seconds to show our logo
 	scheduleOnce(CC_SCHEDULE_SELECTOR(PreloadScene::jumpOut), 3.0f);  
 
 	//init our logo here...
+	auto logo = Sprite::create("FHtankLogo.png");
+	auto _visibleRect = VisibleRect::getVisibleRect();
+	logo->setPosition(Vec2(_visibleRect.size.width / 2, _visibleRect.size.height / 2));
+	this->addChild(logo);
 
 	//try to load files the game need
 	std::thread  preloadThread(&PreloadScene::preloadFiles, this);
@@ -64,5 +67,5 @@ void PreloadScene::jumpOut(float dt)
 **/
 void PreloadScene::preloadFiles()
 {
-
+	
 }
