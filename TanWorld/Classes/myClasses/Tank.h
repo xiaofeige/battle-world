@@ -24,9 +24,13 @@ public:
 	enum class TankDirect
 	{
 		TD_UP,
+		TD_UP_RIGHT,
+		TD_RIGHT,
+		TD_RIGHT_DOWN,
 		TD_DOWN,
+		TD_DOWN_LEFT,
 		TD_LEFT,
-		TD_RIGHT
+		TD_LEFT_UP
 	};
 
 	//be attacked
@@ -54,7 +58,8 @@ class EnemyTank :public FTank
 {
 public:
 	//create function...
-	static EnemyTank*  createWithTexture(Texture2D *texture);
+	static EnemyTank*	create(std::string& fileName);
+	static EnemyTank*	createWithTexture(Texture2D *texture);
 
 	//tank AI start! it should have it's own mind
 	void		AIStart();
@@ -75,14 +80,17 @@ class PlayerTank :public FTank
 {
 public:
 	//create function...
-	static PlayerTank*  createWithTexture(Texture2D *texture);
+	static PlayerTank*		create(std::string& fileName);
+	static PlayerTank*		createWithTexture(Texture2D *texture);
 
 	//attack type , in this way it will be convinient to extends
 	enum class PlayerAction
 	{
-		PA_FIRE_BULLET,
-		PA_FIRE_BOMB,
-		PA_DEFENCE
+		PA_FIRE_BULLET,		//fire normal bullet
+		PA_FIRE_BOMB,		//send big bombs
+		PA_SLIDE,			//slide a little way
+		PA_ULTIMATE,		//the ultimate skill
+		PA_CALL_MERCENARY	//call mercenries
 	};
 
 	//playerTank type, it has diffent type with diffent abbility
