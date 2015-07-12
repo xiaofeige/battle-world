@@ -43,7 +43,7 @@ void PlayerTank::move(Ref *pSender, Widget::TouchEventType _touchType, FTank::Ta
 {
 	if (_touchType == Widget::TouchEventType::MOVED)
 	{
-		//根据状态获取速度
+		//get speed based on tank form
 		int speed;
 		if (m_currentForm == PlayerTank::PlayerTankForm::PTF_HEAVY)
 			speed = (int)(PlayerTank::PlayerTankSpeed::PTS_HEAVY);
