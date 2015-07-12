@@ -1,6 +1,35 @@
 #include "SelectView.h"
+#include "VisibleRect.h"
+
+SelectView::SelectView()
+{
+
+}
+
+SelectView::~SelectView()
+{
+
+}
+
+bool SelectView::init()
+{
+	if (!Layer::init())
+	{
+		return false;
+	}
+
+	auto visibleSize = VisibleRect::getVisibleRect().size;
+	TableView* tableView = TableView::create(this, Size(250, 60));
+	tableView->setAnchorPoint(Vec2(0.5f,0.5f));
+	tableView->setDirection(ScrollView::Direction::HORIZONTAL);
+	tableView->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
+	tableView->setDelegate(this);
+	this->addChild(tableView);
+	tableView->reloadData();
 
 
+	return true;
+}
 
 
 
@@ -17,7 +46,9 @@ void SelectView::tableCellTouched(TableView* table, TableViewCell* cell)
 Size SelectView::tableCellSizeForIndex(TableView *table, ssize_t idx)
 {
 	/*--------------´ýÔö¼Ó-------------------------*/
-	return Size(120, 60);
+	auto visibleSize = VisibleRect::getVisibleRect().size;
+
+	return Size(visibleSize.width * 3 / 4, visibleSize.height * 3 / 4);
 }
 
 TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)

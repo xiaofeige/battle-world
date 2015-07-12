@@ -39,7 +39,7 @@ private:
 	~SelectView();
 
 	//member variables
-
+	int					m_gateNum;
 };
 
 #endif // __SELECT_VIEW_H__

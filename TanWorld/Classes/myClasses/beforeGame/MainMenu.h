@@ -14,12 +14,11 @@ public:
 
 	//menu of game
 	void menuStart(cocos2d::Ref* pSender);
+
+	//player feedback
 	void menuFeedback(cocos2d::Ref* pSender);
 
-
-	//void menuStart(cocos2d::Ref* pSender);
-
-	// a selector callback
+	//exit game
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
 	// implement the "static create()" method manually
