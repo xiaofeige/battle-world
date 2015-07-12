@@ -101,7 +101,12 @@ public:
 		PTF_LANDMINER	//miner tank which can install landmines
 	};
 
-
+	enum class PlayerTankSpeed		//the value need to be considered later+++++
+	{
+		PTS_LIGHT=25,
+		PTS_HEAVY=15,
+		PTS_LANDMINER=10
+	};
 	//controll by the player to move
 	void		move(Ref *pSender, Widget::TouchEventType _touchType, FTank::TankDirect _dir);
 
@@ -110,6 +115,8 @@ public:
 private:
 	PlayerTank();
 	~PlayerTank();
+
+	PlayerTankForm					m_currentForm;		//current form of player
 
 	int								m_exp;				//exprence of the player
 	int								m_skillCd[3];		//cd time of  3 skills

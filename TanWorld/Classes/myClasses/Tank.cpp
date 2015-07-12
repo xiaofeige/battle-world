@@ -19,6 +19,14 @@ EnemyTank* EnemyTank::createWithTexture(Texture2D *texture)
 	EnemyTank* enemyTank = new (std::nothrow) EnemyTank();
 	if (enemyTank && enemyTank->initWithTexture(texture))
 	{
+		//add physic body
+		auto	heroBody = PhysicsBody::createBox(enemyTank->getContentSize());
+		heroBody->setDynamic(true);
+		heroBody->setContactTestBitmask(1);
+		heroBody->setGravityEnable(false);  //设置是否被重力影响,准备画面中不受重力影响
+		enemyTank->setPhysicsBody(heroBody);
+
+
 		enemyTank->autorelease();
 		return enemyTank;
 	}
@@ -78,6 +86,6 @@ void PlayerTank::move(Ref *pSender, Widget::TouchEventType _touchType, FTank::Ta
 	//if button released, set velocity equals zero
 	else if (_touchType == Widget::TouchEventType::ENDED)
 	{
-
+		this->getPhysicsBody()->setVelocity(Vec2::ZERO);
 	}
 }
