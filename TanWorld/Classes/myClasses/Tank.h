@@ -112,7 +112,7 @@ private:
 	~PlayerTank();
 
 	int								m_exp;				//exprence of the player
-	int								m_skillCd[3];		//cd time of  4 skills
+	int								m_skillCd[3];		//cd time of  3 skills
 	int								m_transformCD;		//cd time of transform 
 };
 
