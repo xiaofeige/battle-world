@@ -43,10 +43,21 @@ void PlayerTank::move(Ref *pSender, Widget::TouchEventType _touchType, FTank::Ta
 {
 	if (_touchType == Widget::TouchEventType::MOVED)
 	{
+		//根据状态获取速度
+		int speed;
+		if (m_currentForm == PlayerTank::PlayerTankForm::PTF_HEAVY)
+			speed = (int)(PlayerTank::PlayerTankSpeed::PTS_HEAVY);
+		else if (m_currentForm == PlayerTank::PlayerTankForm::PTF_LIGHT)
+			speed = (int)(PlayerTank::PlayerTankSpeed::PTS_LIGHT);
+		else
+			speed = (int)(PlayerTank::PlayerTankSpeed::PTS_LANDMINER);
+
+
 		switch (_dir)
 		{
 		case FTank::TankDirect::TD_UP:
 		{
+										 
 										 break;
 		}
 			
