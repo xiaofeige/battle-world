@@ -1,7 +1,7 @@
 #include "Tank.h"
 
 //====================================================================
-//=============类名:FTank
+//=============class name:FTank
 //====================================================================
 //2015-7-12
 FTank::FTank()
@@ -11,7 +11,7 @@ FTank::FTank()
 
 
 //====================================================================
-//=============类名:EnemyTank
+//=============class name:EnemyTank
 //====================================================================
 //2015-7-12
 EnemyTank* EnemyTank::createWithTexture(Texture2D *texture)
@@ -28,7 +28,7 @@ EnemyTank* EnemyTank::createWithTexture(Texture2D *texture)
 
 
 //====================================================================
-//=============类名:PlayerTank
+//=============class name:PlayerTank
 //====================================================================
 //2015-7-12
 void PlayerTank::move(Ref *pSender, Widget::TouchEventType _touchType, FTank::TankDirect _dir)
