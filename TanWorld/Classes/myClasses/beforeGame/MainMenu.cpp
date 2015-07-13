@@ -1,4 +1,5 @@
 #include "MainMenu.h"
+#include "../onGame/SelectView.h"
 
 USING_NS_CC;
 
@@ -50,7 +51,11 @@ bool MainMenu::init()
 
 	return true;
 }
+void MainMenu::menuStart(cocos2d::Ref* pSender)
+{
+	auto gateSelectView = SelectView::create();
 
+}
 
 void MainMenu::menuCloseCallback(Ref* pSender)
 {

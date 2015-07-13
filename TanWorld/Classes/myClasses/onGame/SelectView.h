@@ -21,7 +21,7 @@ public:
 	// a selector callback
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
-	//
+	// 
 	//pure virtual functions that need to be overrided
 	virtual void scrollViewDidScroll(cocos2d::extension::ScrollView* view) {};
 	virtual void scrollViewDidZoom(cocos2d::extension::ScrollView* view) {}

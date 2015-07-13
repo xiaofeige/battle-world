@@ -1,6 +1,7 @@
 #include "SelectView.h"
 #include "VisibleRect.h"
 
+
 SelectView::SelectView()
 {
 
@@ -19,8 +20,10 @@ bool SelectView::init()
 	}
 
 	auto visibleSize = VisibleRect::getVisibleRect().size;
-	TableView* tableView = TableView::create(this, Size(250, 60));
-	tableView->setAnchorPoint(Vec2(0.5f,0.5f));
+
+	//add table to this view	
+	TableView* tableView = TableView::create(this, Size(visibleSize.width * 3 / 5, visibleSize.height * 3 / 5));
+	tableView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	tableView->setDirection(ScrollView::Direction::HORIZONTAL);
 	tableView->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
 	tableView->setDelegate(this);
@@ -28,6 +31,17 @@ bool SelectView::init()
 	tableView->reloadData();
 
 
+	auto closeItem = MenuItemImage::create(
+		"CloseNormal.png",
+		"CloseSelected.png",
+		CC_CALLBACK_1(SelectView::menuCloseCallback, this));
+
+	closeItem->setPosition(Vec2(visibleSize.width/2,visibleSize.height/10));
+
+	// create menu, it's an autorelease object
+	auto menu = Menu::create(closeItem, NULL);
+	menu->setPosition(Vec2::ZERO);
+	this->addChild(menu, 1);
 	return true;
 }
 
@@ -48,7 +62,7 @@ Size SelectView::tableCellSizeForIndex(TableView *table, ssize_t idx)
 	/*--------------´ıÔö¼Ó-------------------------*/
 	auto visibleSize = VisibleRect::getVisibleRect().size;
 
-	return Size(visibleSize.width * 3 / 4, visibleSize.height * 3 / 4);
+	return Size(visibleSize.width * 3 / 5, visibleSize.height * 3 / 5);
 }
 
 TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
@@ -82,5 +96,5 @@ TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
 ssize_t SelectView::numberOfCellsInTableView(TableView *table)
 {
 	//   here the number need to be changed later
-	return 20;
+	return this->m_gateNum;
 }

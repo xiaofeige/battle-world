@@ -3,9 +3,15 @@
 
 #include "cocos2d.h"
 #include "audio/include/SimpleAudioEngine.h"
+#include "../extensions/cocos-ext.h"
+#include "cocostudio/CocoStudio.h"
+#include "ui/CocosGUI.h"
 #include "VisibleRect.h"
 
+USING_NS_CC_EXT;
 USING_NS_CC;
+using namespace cocos2d::ui;
+using namespace CocosDenshion;
 
 class BaseScene : public Scene
 {
@@ -17,23 +23,28 @@ public:
 	};
 
 	//
-	BaseScene(bool physics = false);
+	BaseScene(bool physics = true);
 	virtual void onEnter() override;
 
 	//background music 
-	void		turnOnBgMusic(std::string _fileName);
-	void		turnUpDown(VoiceLevel _vl);
+	void		turnOnBgMusic(Ref *pSender, Widget::TouchEventType _touchType);
+
+	void		turnUpDown(Ref *pSender, Widget::TouchEventType _touchType,VoiceLevel _vl);
 
 	//pause
-	void		gamePause();
+	void		gamePause(Ref *pSender, Widget::TouchEventType _touchType);
 
 	//
-	void		returnToMainScene();
+	void		returnToMainScene(Ref *pSender, Widget::TouchEventType _touchType);
 
 	//
-	void		replaceThisScene();
+	void		replaceThisScene(Ref *pSender, Widget::TouchEventType _touchType);
+
 	//compell every derived scene to override this method
 	virtual void runThisScene() = 0;
+
+private:
+	bool				m_isBgMusicRunning;		//background music running status
 };
 
 // C++ 11
