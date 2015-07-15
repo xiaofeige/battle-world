@@ -7,6 +7,7 @@
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include "VisibleRect.h"
+#include "..\Tank.h"
 
 USING_NS_CC_EXT;
 USING_NS_CC;
@@ -16,20 +17,26 @@ using namespace CocosDenshion;
 class BaseScene : public Scene
 {
 public:
-	enum class VoiceLevel
-	{
-		VL_UP,
-		VL_DOWN
-	};
-
 	//
 	BaseScene(bool physics = true);
 	virtual void onEnter() override;
 
-	//background music 
-	void		turnOnBgMusic(Ref *pSender, Widget::TouchEventType _touchType);
+	//compell every derived scene to override this method
+	virtual void runThisScene();
 
-	void		turnUpDown(Ref *pSender, Widget::TouchEventType _touchType,VoiceLevel _vl);
+private:
+	
+};
+
+
+class BaseLayer :public cocos2d::Layer
+{
+public:
+	virtual bool init();
+	CREATE_FUNC(BaseLayer);
+
+	//background music
+	void		turnOnBgMusic(Ref *pSender, Widget::TouchEventType _touchType);
 
 	//pause
 	void		gamePause(Ref *pSender, Widget::TouchEventType _touchType);
@@ -40,13 +47,17 @@ public:
 	//
 	void		replaceThisScene(Ref *pSender, Widget::TouchEventType _touchType);
 
-	//compell every derived scene to override this method
-	virtual void runThisScene() = 0;
+
+	//当玩家到达指定位置 则发生将滚动一次地面
+	void		moveBackground();
+
 
 private:
-	bool				m_isBgMusicRunning;		//background music running status
-};
+	bool							m_isBgMusicRunning;		//background music running status
 
+	PlayerTank*						m_currentPlayer;
+	std::condition_variable			m_shouldMove;
+};
 // C++ 11
 
 #define CL(__className__) [](){ return __className__::create();}

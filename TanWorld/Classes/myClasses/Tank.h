@@ -61,6 +61,7 @@ public:
 	static EnemyTank*	create(std::string& fileName);
 	static EnemyTank*	createWithTexture(Texture2D *texture);
 
+
 	//tank AI start! it should have it's own mind
 	void		AIStart();
 
