@@ -2,10 +2,6 @@
 
 
 
-BaseScene* Chapter1::createScene()
-{
-
-}
 
 bool Chapter1::init()
 {
@@ -16,4 +12,10 @@ bool Chapter1::init()
 
 
 	return true;
+}
+
+bool Chapter1::contactListen(const PhysicsContact& contact)
+{
+	auto spriteA = contact.getShapeA()->getBody()->getTag();
+	auto spriteB = contact.getShapeB()->getBody()->getTag();
 }

@@ -14,19 +14,17 @@ USING_NS_CC;
 using namespace cocos2d::ui;
 using namespace CocosDenshion;
 
-class BaseScene : public Scene
-{
-public:
-	//
-	BaseScene(bool physics = true);
-	virtual void onEnter() override;
 
-	//compell every derived scene to override this method
-	virtual void runThisScene();
-
-private:
-	
-};
+#define RUN_THIS_CHAPTER(__TYPE__) \
+	void runThisChapter() \
+{ \
+	auto scene = Scene::createWithPhysics(); \
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_NONE); \
+	auto gameLayer = __TYPE__::create(); \
+	scene->addChild(gameLayer); \
+	auto transScene = TransitionTurnOffTiles::create(0.8f, scene); \
+	Director::getInstance()->replaceScene(transScene); \
+}
 
 
 class BaseLayer :public cocos2d::Layer
@@ -43,9 +41,6 @@ public:
 
 	//
 	void		returnToMainScene(Ref *pSender, Widget::TouchEventType _touchType);
-
-	//
-	void		replaceThisScene(Ref *pSender, Widget::TouchEventType _touchType);
 
 
 	//当玩家到达指定位置 则发生将滚动一次地面
