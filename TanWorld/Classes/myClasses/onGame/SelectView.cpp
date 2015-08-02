@@ -1,8 +1,10 @@
 #include "SelectView.h"
-#include "VisibleRect.h"
+#include "..\GameHandleLib.h"
 
+USING_NS_CC_EXT;
 
 SelectView::SelectView()
+:m_gateNum(0)
 {
 
 }
@@ -24,9 +26,11 @@ bool SelectView::init()
 	//add table to this view	
 	TableView* tableView = TableView::create(this, Size(visibleSize.width * 3 / 5, visibleSize.height * 3 / 5));
 	tableView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	tableView->setDirection(ScrollView::Direction::HORIZONTAL);
-	tableView->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
+	tableView->setDirection(extension::ScrollView::Direction::HORIZONTAL);
+	//tableView->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
+	tableView->setPosition(Vec2(0, 0));
 	tableView->setDelegate(this);
+	tableView->setZOrder(2);
 	this->addChild(tableView);
 	tableView->reloadData();
 
@@ -46,7 +50,10 @@ bool SelectView::init()
 }
 
 
-
+void SelectView::menuCloseCallback(cocos2d::Ref* pSender)
+{
+	this->removeFromParent(); 
+}
 
 
 
@@ -55,7 +62,8 @@ bool SelectView::init()
 /*--------------------------------------------------------------------------*/
 void SelectView::tableCellTouched(TableView* table, TableViewCell* cell)
 {
-	CCLOG("cell touched at index: %ld", cell->getIdx());
+	auto idx = cell->getIdx(); 
+	chapters[idx].callBack()->runThisChapter();
 }
 
 Size SelectView::tableCellSizeForIndex(TableView *table, ssize_t idx)
@@ -68,12 +76,11 @@ Size SelectView::tableCellSizeForIndex(TableView *table, ssize_t idx)
 
 TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
 {
-	//auto string = String::createWithFormat("%ld", idx);
 	TableViewCell *cell = table->dequeueCell();
 	if (!cell) {
 		cell = new (std::nothrow) TableViewCell();
 		cell->autorelease();
-		auto sprite = Sprite::create("pic/numView.png"); //load background of each cell
+		auto sprite = Sprite::create(chapterTestPath); //load background of each cell
 		sprite->setAnchorPoint(Vec2::ZERO);
 		sprite->setPosition(Vec2(0, 0));
 		cell->addChild(sprite);
@@ -97,5 +104,5 @@ TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
 ssize_t SelectView::numberOfCellsInTableView(TableView *table)
 {
 	//   here the number need to be changed later
-	return this->m_gateNum;
+	return getArrayLength(chapters);
 }

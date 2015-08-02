@@ -1,25 +1,27 @@
-#ifndef _TEST_BASIC_H_
-#define _TEST_BASIC_H_
+#ifndef _BASE_LAYER_H_
+#define _BASE_LAYER_H_
 
-#include "cocos2d.h"
 #include "audio/include/SimpleAudioEngine.h"
 #include "../extensions/cocos-ext.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include "VisibleRect.h"
-#include "..\Tank.h"
+#include "../Bullet.h"
 
-USING_NS_CC_EXT;
-USING_NS_CC;
+#include "BaseDefine.h"
+#include "AISystem.h"
+
+//USING_NS_CC_EXT;
+//USING_NS_CC;
 using namespace cocos2d::ui;
 using namespace CocosDenshion;
 
 
 #define RUN_THIS_CHAPTER(__TYPE__) \
-	void runThisChapter() \
+	virtual void runThisChapter() \
 { \
 	auto scene = Scene::createWithPhysics(); \
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_NONE); \
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); \
 	auto gameLayer = __TYPE__::create(); \
 	scene->addChild(gameLayer); \
 	auto transScene = TransitionTurnOffTiles::create(0.8f, scene); \
@@ -30,8 +32,10 @@ using namespace CocosDenshion;
 class BaseLayer :public cocos2d::Layer
 {
 public:
+	BaseLayer();
+	~BaseLayer();
 	virtual bool init();
-	CREATE_FUNC(BaseLayer);
+	virtual void runThisChapter()=0;
 
 	//background music
 	void		turnOnBgMusic(Ref *pSender, Widget::TouchEventType _touchType);
@@ -42,20 +46,16 @@ public:
 	//
 	void		returnToMainScene(Ref *pSender, Widget::TouchEventType _touchType);
 
+protected:
+	//碰撞检测
+	bool		contactListen(const PhysicsContact& contact);
 
-	//当玩家到达指定位置 则发生将滚动一次地面
-	void		moveBackground();
 
-
-private:
 	bool							m_isBgMusicRunning;		//background music running status
 
 	PlayerTank*						m_currentPlayer;
-	std::condition_variable			m_shouldMove;
+
+	AISystem						m_AIManager;			//AI system	manager
 };
 // C++ 11
-
-#define CL(__className__) [](){ return __className__::create();}
-#define CLN(__className__) [](){ auto obj = new __className__(); obj->autorelease(); return obj; }
-
-#endif
+#endif		//__BASE_LAYER_H__

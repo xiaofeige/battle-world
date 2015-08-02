@@ -23,6 +23,15 @@ template <typename T> std::string tostr(const T& t)
 	std::ostringstream os; os << t; return os.str();
 }
 
+/*
+*NAME:	getArrayLength
+*PARA:	T  any type of array will be okay
+*DESC:	get the length of array length (PS: will not work if the array is created by "new")
+**/
+template <typename T> int getArrayLength(const T& t)
+{
+	return sizeof(t) / sizeof(t[0]);
+}
 
 /*
 *NAME:	seekFromRootByName

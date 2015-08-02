@@ -2,11 +2,7 @@
 #define __SELECT_VIEW_H__
 
 #include "cocos2d.h"
-#include "../extensions/cocos-ext.h"
-#include "cocos-ext.h"
-
-USING_NS_CC;
-USING_NS_CC_EXT;
+#include "GameScenes\ChapterController.h"
 
 class SelectView 
 	: public cocos2d::Layer
@@ -21,7 +17,7 @@ public:
 	// a selector callback
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
-	// 
+	//
 	//pure virtual functions that need to be overrided
 	virtual void scrollViewDidScroll(cocos2d::extension::ScrollView* view) {};
 	virtual void scrollViewDidZoom(cocos2d::extension::ScrollView* view) {}

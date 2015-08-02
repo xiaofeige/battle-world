@@ -7,16 +7,47 @@
 #include "../extensions/cocos-ext.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
+#include "BaseDefine.h"
+#include "Bullet.h"
 
-USING_NS_CC_EXT;
-USING_NS_CC;
 using namespace cocos2d::ui;
 
+/*--------------------------------------------------------------
+*NAME:	BloodBar
+*DESC:	this is the Blood of tank
+---------------------------------------------------------------*/
+class BloodBar : public Node
+{
+public:
+	static BloodBar* create();
 
-/*
+	virtual bool init();
+
+	void	increase(int blood);
+	void	decreace(int blood);
+
+	void	setRange(int maxBlood);
+	void	setBlood(int blood);
+
+	int		getBlood()const;
+
+	cocos2d::Size	getBloodBarSize()const;		//获取血条的大小
+protected:
+	BloodBar();
+	~BloodBar();
+
+private:
+	cocos2d::Sprite*			m_currBloodBar;	//当前血量同步精灵 作为这个控件的子节点
+	cocos2d::Sprite*			m_bloodBg;		//血条背景
+
+	int							m_range;		//血条范围
+	int							m_currBlood;	//当前血量
+};
+
+/*---------------------------------------------------------------
 *NAME:	FTank
 *DESC:	this is the base of Tank.
-*/
+---------------------------------------------------------------*/
 class FTank : public Sprite
 {
 public:
@@ -32,58 +63,70 @@ public:
 		TD_LEFT,
 		TD_LEFT_UP
 	};
+	//init tank after created
+	virtual bool init();
 
 	//be attacked
 	void		beAttacked(int damage);
 
-private:
+protected:
 	FTank();
-	~FTank();
+	virtual ~FTank();
 
+protected:
+	BloodBar*					m_healthHub;			//blood
 
-	TankDirect					m_currentDir;			//current tank direction
+	Vec2						m_currentDir;			//current tank direction
 
 	int							m_HP;					//blood level
 	int							m_level;				//tank level
 	int							m_damageLevel;			//value of attack
+
+	cocos2d::Size				m_tankSize;				//size of tank
+	float						m_angle;				//current angle after spin
+	Vec2						m_headPoint;			//head to fire
 };
 
 
-/*
+/*-------------------------------------------------------------------------
 *NAME:	EnemyTank
 *DESC:	this kind of tank have it's own mind, sometimes it will kown how to 
 *		avoid being attack and kown how to attack you
-*/
+-------------------------------------------------------------------------*/
 class EnemyTank :public FTank
 {
 public:
 	//create function...
-	static EnemyTank*	create(std::string& fileName);
-	static EnemyTank*	createWithTexture(Texture2D *texture);
+	CREATE_WITH_TEXTURE(EnemyTank);
+	CREATE_WITH_FILE(EnemyTank);
+	//init Tank after constructed
+	virtual bool init();
 
-
+	enum class EnemySpeed
+	{
+		ES_SPEED=25
+	};
 	//tank AI start! it should have it's own mind
 	void		AIStart();
 
-private:
-	//let constructor and desconstructor be private so that this class 
+protected:
+	//let constructor and desconstructor be protected so that this class 
 	//won't be created unconsitiously
 	EnemyTank();
-	~EnemyTank();
+	virtual ~EnemyTank();
 
 };
 
-/*
+/*--------------------------------------------------------------------------
 *NAME: PlayerTank
-*DESC: 
-*/
+*DESC:
+---------------------------------------------------------------------------*/
 class PlayerTank :public FTank
 {
 public:
 	//create function...
-	static PlayerTank*		create(std::string& fileName);
-	static PlayerTank*		createWithTexture(Texture2D *texture);
-
+	CREATE_WITH_TEXTURE(PlayerTank);
+	CREATE_WITH_FILE(PlayerTank);
 	//attack type , in this way it will be convinient to extends
 	enum class PlayerAction
 	{
@@ -104,24 +147,37 @@ public:
 
 	enum class PlayerTankSpeed		//the value need to be considered later+++++
 	{
-		PTS_LIGHT=25,
-		PTS_HEAVY=15,
-		PTS_LANDMINER=10
+		PTS_LIGHT=35,
+		PTS_HEAVY=25,
+		PTS_LANDMINER=20
 	};
+
+	enum class PlayerTankMass		//mass of different type
+	{
+		PTM_LIGHT = 10,
+		PTM_HEAVY = 30,
+		PTM_LANDMINER=20
+	};
+
+	//init Tank after constructed
+	virtual bool init();
+
 	//controll by the player to move
 	void		move(Ref *pSender, Widget::TouchEventType _touchType, FTank::TankDirect _dir);
 
 	//try to attack
 	void		act(Ref *pSender, Widget::TouchEventType _touchType, PlayerTank::PlayerAction _playerAction);
-private:
-	PlayerTank();
-	~PlayerTank();
 
+protected:
+	PlayerTank();
+	virtual ~PlayerTank();
+
+private:
 	PlayerTankForm					m_currentForm;		//current form of player
 
 	int								m_exp;				//exprence of the player
 	int								m_skillCd[3];		//cd time of  3 skills
-	int								m_transformCD;		//cd time of transform 
+	int								m_transformCD;		//cd time of transform
 };
 
 #endif  //__FTANK_H__

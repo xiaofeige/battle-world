@@ -2,6 +2,7 @@
 #include "MainMenu.h"
 #include<thread>
 #include "VisibleRect.h"
+#include "../GameResource.h"
 
 USING_NS_CC;
 
@@ -31,10 +32,10 @@ bool PreloadScene::init()
 	}
 
 	//3 seconds to show our logo
-	scheduleOnce(CC_SCHEDULE_SELECTOR(PreloadScene::jumpOut), 3.0f);  
+	scheduleOnce(CC_SCHEDULE_SELECTOR(PreloadScene::jumpOut), 2.0f);  
 
 	//init our logo here...
-	auto logo = Sprite::create("FHtankLogo.png");
+	auto logo = Sprite::create(logoImgPath);
 	auto _visibleRect = VisibleRect::getVisibleRect();
 	logo->setPosition(Vec2(_visibleRect.size.width / 2, _visibleRect.size.height / 2));
 	this->addChild(logo);

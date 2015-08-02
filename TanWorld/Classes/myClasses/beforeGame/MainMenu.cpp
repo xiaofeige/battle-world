@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 #include "../onGame/SelectView.h"
+#include "VisibleRect.h"
 
 USING_NS_CC;
 
@@ -35,6 +36,12 @@ bool MainMenu::init()
 	// 2. add a menu item with "X" image, which is clicked to quit the program
 	//    you may modify it.
 
+	//add background image
+	auto tankBattleImg = Sprite::create(preloadingImgPath);
+	tankBattleImg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	tankBattleImg->setPosition(VisibleRect::center());
+	this->addChild(tankBattleImg);
+
 	// add a "close" icon to exit the progress. it's an autorelease object
 	auto closeItem = MenuItemImage::create(
 		"CloseNormal.png",
@@ -45,15 +52,32 @@ bool MainMenu::init()
 		origin.y + closeItem->getContentSize().height / 2));
 
 	// create menu, it's an autorelease object
-	auto menu = Menu::create(closeItem, NULL);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
+	auto menuClose = Menu::create(closeItem, NULL);
+	menuClose->setPosition(Vec2::ZERO);
+	this->addChild(menuClose, 1);
 
+	//create user select menu...
+	MenuItemFont::setFontName("fonts/Marker Felt.ttf");
+	auto itemStart = MenuItemFont::create("let get it started!", CC_CALLBACK_1(MainMenu::menuStart, this));
+	auto itemFeedBack = MenuItemFont::create("contact us!", CC_CALLBACK_1(MainMenu::menuFeedback, this));
+	auto menu = Menu::create(itemStart, itemFeedBack, nullptr);
+	menu->alignItemsVertically();
+
+	this->addChild(menu);
+	
 	return true;
 }
 void MainMenu::menuStart(cocos2d::Ref* pSender)
 {
 	auto gateSelectView = SelectView::create();
+	gateSelectView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	gateSelectView->setPosition(VisibleRect::leftBottom());
+
+	this->addChild(gateSelectView);
+}
+
+void MainMenu::menuFeedback(cocos2d::Ref* pSender)
+{
 
 }
 
