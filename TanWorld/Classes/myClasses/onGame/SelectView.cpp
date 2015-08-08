@@ -5,6 +5,7 @@ USING_NS_CC_EXT;
 
 SelectView::SelectView()
 :m_gateNum(0)
+,m_cellSize(Size(0,0))
 {
 
 }
@@ -23,12 +24,15 @@ bool SelectView::init()
 
 	auto visibleSize = VisibleRect::getVisibleRect().size;
 
+	//caculate table cell size
+	m_cellSize = Size(visibleSize.width/5,visibleSize.height*3/5);
+
+	this->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	//add table to this view	
-	TableView* tableView = TableView::create(this, Size(visibleSize.width * 3 / 5, visibleSize.height * 3 / 5));
+	TableView* tableView = TableView::create(this, Size(m_cellSize.width*3, m_cellSize.height));
 	tableView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	tableView->setDirection(extension::ScrollView::Direction::HORIZONTAL);
-	//tableView->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
-	tableView->setPosition(Vec2(0, 0));
+	tableView->setPosition(VisibleRect::center());
 	tableView->setDelegate(this);
 	tableView->setZOrder(2);
 	this->addChild(tableView);
@@ -52,7 +56,7 @@ bool SelectView::init()
 
 void SelectView::menuCloseCallback(cocos2d::Ref* pSender)
 {
-	this->removeFromParent(); 
+	this->removeFromParentAndCleanup(true); 
 }
 
 
@@ -62,16 +66,13 @@ void SelectView::menuCloseCallback(cocos2d::Ref* pSender)
 /*--------------------------------------------------------------------------*/
 void SelectView::tableCellTouched(TableView* table, TableViewCell* cell)
 {
-	auto idx = cell->getIdx(); 
+	auto idx = cell->getIdx();
 	chapters[idx].callBack()->runThisChapter();
 }
 
 Size SelectView::tableCellSizeForIndex(TableView *table, ssize_t idx)
 {
-	/*--------------´ýÔö¼Ó-------------------------*/
-	auto visibleSize = VisibleRect::getVisibleRect().size;
-
-	return Size(visibleSize.width * 3 / 5, visibleSize.height * 3 / 5);
+	return m_cellSize;
 }
 
 TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
@@ -80,12 +81,14 @@ TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
 	if (!cell) {
 		cell = new (std::nothrow) TableViewCell();
 		cell->autorelease();
-		auto sprite = Sprite::create(chapterTestPath); //load background of each cell
-		sprite->setAnchorPoint(Vec2::ZERO);
+		auto sprite = Sprite::create(chapters[idx].chapterLookPath); //load background of each cell
+		sprite->setScaleX(this->getContentSize().width*m_cellSize.width/this->getContentSize().width);
+		sprite->setScaleY(this->getContentSize().height*m_cellSize.height/this->getContentSize().height);
+		sprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		sprite->setPosition(Vec2(0, 0));
 		cell->addChild(sprite);
 
-		auto label = Label::createWithSystemFont("xiaofei", "Helvetica", 20.0);
+		auto label = Label::createWithSystemFont(chapters[idx].chapterName, "Helvetica", 20.0);
 		label->setPosition(Vec2::ZERO);
 		label->setAnchorPoint(Vec2::ZERO);
 		label->setTag(123);
@@ -94,7 +97,7 @@ TableViewCell* SelectView::tableCellAtIndex(TableView *table, ssize_t idx)
 	else
 	{
 		auto label = (Label*)cell->getChildByTag(123);
-		label->setString("xiaofei");
+		label->setString(chapters[idx].chapterName);
 	}
 
 

@@ -4,10 +4,12 @@
 #include "cocos2d.h"
 #include "BaseDefine.h"
 #include "GameResource.h"
+#include "VisibleRect.h"
 
 USING_NS_CC;
-
+/*------------------------------------------------------------------------------------
 //definition of method to initial sprite with texture
+-------------------------------------------------------------------------------------*/
 #define CREATE_WITH_TEXTURE(__TYPE__) \
 	static __TYPE__* createWithTexure(Texture2D* texture)\
 {\
@@ -28,8 +30,9 @@ else\
 	return nullptr; \
 }\
 }
-
+/*------------------------------------------------------------------------------------
 //definiton of method to init sprite with file
+*-----------------------------------------------------------------------------------*/
 #define CREATE_WITH_FILE(__TYPE__) \
 	static __TYPE__* create(const std::string& fileName)\
 {\
@@ -38,6 +41,7 @@ if (pRet && pRet->initWithFile(fileName) && pRet->init())\
 {\
 	auto heroBody = PhysicsBody::createBox(pRet->getContentSize()); \
 	heroBody->setDynamic(true); \
+	heroBody->setRotationEnable(false); \
 	heroBody->setContactTestBitmask(UNITIVE_MASK); \
 	heroBody->setGravityEnable(false);  \
 	pRet->setPhysicsBody(heroBody); \
@@ -50,13 +54,12 @@ else\
 	return nullptr; \
 }\
 }
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/*
+
+
+/*--------------------------------------------------------------------------------------
 *NAME:	Bullet
 *DESC:	this is the class of Bullet.
-*/////////////////////////////////////////////////////////////////////////////////////////
+*-------------------------------------------------------------------------------------*/
 class Bullet : public Sprite
 {
 public:
@@ -74,11 +77,11 @@ protected:
 	int				m_damage;			//…À∫¶
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////
-/*
+
+/*----------------------------------------------------------------------------------------
 *NAME:	Bomb
 *DESC:	this is the class of Bomb.
-*/////////////////////////////////////////////////////////////////////////////////////////
+----------------------------------------------------------------------------------------*/
 class Bomb :public Bullet
 {
 public:
@@ -93,13 +96,16 @@ protected:
 	Bomb();
 	~Bomb();
 
+private:
+	void			removeStunt(float dt);
+	ParticleSystemQuad*			m_bom;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////
-/*
+
+/*----------------------------------------------------------------------------------------
 *NAME:	NuclearWeapon
 *DESC:	this is the class of NuclearWeapon which is the most powerful skill of player
-*/////////////////////////////////////////////////////////////////////////////////////////
+-----------------------------------------------------------------------------------------*/
 class NuclearWeapon :public Bullet
 {
 public:

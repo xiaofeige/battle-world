@@ -4,6 +4,10 @@
 #include "cocos2d.h"
 #include "GameScenes\ChapterController.h"
 
+/*----------------------------------------------------------------------------------
+*CLASS NAME£ºSelectView
+*DESC: table for player to choose which chapter he(she) would to play.
+------------------------------------------------------------------------------------*/
 class SelectView 
 	: public cocos2d::Layer
 	, public cocos2d::extension::TableViewDataSource
@@ -36,6 +40,7 @@ private:
 
 	//member variables
 	int					m_gateNum;
+	cocos2d::Size		m_cellSize;
 };
 
 #endif // __SELECT_VIEW_H__

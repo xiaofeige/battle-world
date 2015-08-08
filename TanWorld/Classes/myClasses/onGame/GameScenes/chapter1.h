@@ -15,6 +15,7 @@ public:
 
 	CREATE_FUNC(Chapter1);
 	RUN_THIS_CHAPTER(Chapter1);
-private:
-	
+protected:
+	Chapter1();
+	~Chapter1();
 };

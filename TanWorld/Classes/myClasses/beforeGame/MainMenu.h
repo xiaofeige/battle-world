@@ -3,7 +3,10 @@
 
 #include "cocos2d.h"
 #include "..\GameHandleLib.h"
-
+/*-------------------------------------------------------------------------------
+*CLASS NAME: MainMenu
+*DESC:	a scene for player to choose
+---------------------------------------------------------------------------------*/
 class MainMenu : public cocos2d::Layer
 {
 public:

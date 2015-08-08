@@ -1,10 +1,12 @@
 #include "PreloadScene.h"
 #include "MainMenu.h"
-#include<thread>
 #include "VisibleRect.h"
 #include "../GameResource.h"
+#include "audio/include/SimpleAudioEngine.h"
 
+#include<thread>
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* PreloadScene::createScene()
 {
@@ -64,9 +66,10 @@ void PreloadScene::jumpOut(float dt)
 /*
 *NAME:preloadFiles
 *PARA:N
-*DESC:preload pictures,musics,and so on...
+*DESC:preload pictures,musics,and so on... so as to show our logo for 2 seconds
 **/
 void PreloadScene::preloadFiles()
 {
-	      
+	//preload the background music
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic(LoadingMusicPath);
 }

@@ -61,8 +61,8 @@ bool MainMenu::init()
 	auto itemStart = MenuItemFont::create("let get it started!", CC_CALLBACK_1(MainMenu::menuStart, this));
 	auto itemFeedBack = MenuItemFont::create("contact us!", CC_CALLBACK_1(MainMenu::menuFeedback, this));
 	auto menu = Menu::create(itemStart, itemFeedBack, nullptr);
-	menu->alignItemsVertically();
-
+	menu->alignItemsHorizontallyWithPadding(200.0f);
+	menu->setPosition(VisibleRect::center());
 	this->addChild(menu);
 	
 	return true;
@@ -71,14 +71,15 @@ void MainMenu::menuStart(cocos2d::Ref* pSender)
 {
 	auto gateSelectView = SelectView::create();
 	gateSelectView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	gateSelectView->setPosition(VisibleRect::leftBottom());
+	gateSelectView->setPosition(VisibleRect::center());
 
+	auto s=gateSelectView->getContentSize();
 	this->addChild(gateSelectView);
 }
 
 void MainMenu::menuFeedback(cocos2d::Ref* pSender)
 {
-
+	Application::getInstance()->openURL("http://flewawayblog.sinaapp.com/");
 }
 
 void MainMenu::menuCloseCallback(Ref* pSender)

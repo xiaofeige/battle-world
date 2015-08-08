@@ -7,7 +7,6 @@
 #include "../extensions/cocos-ext.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
-#include "BaseDefine.h"
 #include "Bullet.h"
 
 using namespace cocos2d::ui;
@@ -23,7 +22,9 @@ public:
 
 	virtual bool init();
 
+	//on blood recover
 	void	increase(int blood);
+	//on be attacked
 	void	decreace(int blood);
 
 	void	setRange(int maxBlood);
@@ -73,6 +74,15 @@ protected:
 	FTank();
 	virtual ~FTank();
 
+	//turning methods
+	//turn diretion methods
+	void	turnUp();
+	void	turnDown();
+	void	turnRight();
+	void	turnLeft();
+
+	//tank die and run a animation
+	virtual void	goDie();
 protected:
 	BloodBar*					m_healthHub;			//blood
 
@@ -85,6 +95,7 @@ protected:
 	cocos2d::Size				m_tankSize;				//size of tank
 	float						m_angle;				//current angle after spin
 	Vec2						m_headPoint;			//head to fire
+	Vec2						m_healthBarPos;			//health bar position
 };
 
 
@@ -104,11 +115,19 @@ public:
 
 	enum class EnemySpeed
 	{
-		ES_SPEED=25
+		ES_SPEED=45
 	};
 	//tank AI start! it should have it's own mind
 	void		AIStart();
 
+private:
+	//fire method
+	void	fire(float	dt);
+
+	//update to change robot's reaction, in some way it looks like it has its own mind
+	void	update(float dt);
+private:
+	Vec2			m_lastPostion;		//postion before update
 protected:
 	//let constructor and desconstructor be protected so that this class 
 	//won't be created unconsitiously
@@ -134,7 +153,8 @@ public:
 		PA_FIRE_BOMB,		//send big bombs
 		PA_SLIDE,			//slide a little way
 		PA_ULTIMATE,		//the ultimate skill
-		PA_CALL_MERCENARY	//call mercenries
+		PA_CALL_MERCENARY,	//call mercenries
+		PA_TRANSFORM		//transform 
 	};
 
 	//playerTank type, it has diffent type with diffent abbility
@@ -154,9 +174,9 @@ public:
 
 	enum class PlayerTankMass		//mass of different type
 	{
-		PTM_LIGHT = 10,
-		PTM_HEAVY = 30,
-		PTM_LANDMINER=20
+		PTM_LIGHT = 100,
+		PTM_HEAVY = 300,
+		PTM_LANDMINER=200
 	};
 
 	//init Tank after constructed
@@ -168,10 +188,19 @@ public:
 	//try to attack
 	void		act(Ref *pSender, Widget::TouchEventType _touchType, PlayerTank::PlayerAction _playerAction);
 
+public:
+	//DESC: refresh the CD time of skills
+	//function type: return void, para: PlayerAction
+	std::function<void(PlayerTank::PlayerAction _playerAction)>			onAct;				//cd time refresh 
+	
+	//
+	std::function<void(Vec2  _dir)>										onMapMove;
 protected:
 	PlayerTank();
 	virtual ~PlayerTank();
 
+	//override goDie method
+	virtual  void  goDie()override;
 private:
 	PlayerTankForm					m_currentForm;		//current form of player
 

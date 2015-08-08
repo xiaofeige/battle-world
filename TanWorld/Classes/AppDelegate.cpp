@@ -31,13 +31,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
 
-	//set search path+++++++++++++++++++++++
+	/*----------------------------set search path-----------------------------*/
 	auto fileUtils = FileUtils::getInstance();
 	std::vector<std::string>	searchPath;
 		//pathes need to be added
 	searchPath.push_back("pic");  //etc...
+	searchPath.push_back("tankWorldBg");
+	searchPath.push_back("explode");
 		//pathed ended
 	fileUtils->setSearchPaths(searchPath);
+	/*------------------------------------------------------------------------*/
 
     // turn on display FPS
     director->setDisplayStats(true);
