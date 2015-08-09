@@ -192,8 +192,8 @@ public:
 	//DESC: refresh the CD time of skills
 	//function type: return void, para: PlayerAction
 	std::function<void(PlayerTank::PlayerAction _playerAction)>			onAct;				//cd time refresh 
-	
-	//
+	bool				getSkillCD(int* &cdArray,int& arrLen);
+	//DESC: 
 	std::function<void(Vec2  _dir)>										onMapMove;
 protected:
 	PlayerTank();
@@ -210,4 +210,3 @@ private:
 };
 
 #endif  //__FTANK_H__
-

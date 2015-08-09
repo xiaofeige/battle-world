@@ -29,10 +29,10 @@ bool Chapter1::init()
 		//设置层号  z-order
 		std::string		nodeName = "roads";
 		auto  roads = seekFromRootByName(m_map, nodeName);
-		roads->setGlobalZOrder(-1);
+		roads->setZOrder(-1);
 		nodeName = "trees";
 		auto trees = seekFromRootByName(m_map, nodeName);
-		trees->setGlobalZOrder(5);
+		trees->setZOrder(5);
 		trees->setOpacity(245);
 
 		//障碍物添加刚体
@@ -72,6 +72,8 @@ bool Chapter1::init()
 		}
 	}
 	
+	//添加玩家进入
+	this->initPlayer();
 	
 	//添加机器人
 	m_AIManager.addRobot(Vec2(100, 100));

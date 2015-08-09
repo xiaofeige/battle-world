@@ -307,6 +307,12 @@ void PlayerTank::goDie()
 
 }
 
+bool PlayerTank::getSkillCD(int* &cdArray, int& arrLen)
+{
+	cdArray = m_skillCd;
+	arrLen = 3;
+	return true;
+}
 void PlayerTank::move(Ref *pSender, Widget::TouchEventType _touchType, FTank::TankDirect _dir)
 {
 	if (_touchType == Widget::TouchEventType::MOVED || _touchType == Widget::TouchEventType::BEGAN)

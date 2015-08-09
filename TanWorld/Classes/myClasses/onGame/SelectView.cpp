@@ -27,16 +27,15 @@ bool SelectView::init()
 	//caculate table cell size
 	m_cellSize = Size(visibleSize.width/5,visibleSize.height*3/5);
 
-	this->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	//add table to this view	
-	TableView* tableView = TableView::create(this, Size(m_cellSize.width*3, m_cellSize.height));
-	tableView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	tableView->setDirection(extension::ScrollView::Direction::HORIZONTAL);
-	tableView->setPosition(VisibleRect::center());
-	tableView->setDelegate(this);
-	tableView->setZOrder(2);
-	this->addChild(tableView);
-	tableView->reloadData();
+	//add table to this view
+	m_chapterTable = TableView::create(this, Size(m_cellSize.width * 3, m_cellSize.height));
+	m_chapterTable->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	m_chapterTable->setDirection(extension::ScrollView::Direction::HORIZONTAL);
+	m_chapterTable->setPosition(VisibleRect::leftBottom());
+	m_chapterTable->setDelegate(this);
+	m_chapterTable->setZOrder(2);
+	this->addChild(m_chapterTable);
+	m_chapterTable->reloadData();
 
 
 	auto closeItem = MenuItemImage::create(

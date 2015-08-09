@@ -43,81 +43,14 @@ bool BaseLayer::init()
 	//set schudual to update button CD every seconds to check
 	schedule(CC_SCHEDULE_SELECTOR(BaseLayer::refreshButtonCD), 1.0f);
 
-	//set player
-	m_currentPlayer = PlayerTank::create(tankImgPath);
-	if (m_currentPlayer)
-	{
-		m_currentPlayer->setPosition(VisibleRect::center());
-		m_currentPlayer->getPhysicsBody()->setTag(PLAYER_TAG);
-		m_currentPlayer->setGlobalZOrder(TANK_Z_ORDER);
-		this->addChild(m_currentPlayer);
+	////设置CD更新函数
+	//m_currentPlayer->onAct = [&](PlayerTank::PlayerAction _act)
+	//{
 
+	//};
 
-		//将地图滚动和坦克移动关联起来
-		m_currentPlayer->onMapMove = CC_CALLBACK_1(BaseLayer::onMapMove,this);
-	}
-
-	//load controller
-	auto controllerImg = CSLoader::createNode(PlayerControllerPath);
-	controllerImg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	controllerImg->setPosition(VisibleRect::center());
-	this->addChild(controllerImg);
-	controllerImg->setGlobalZOrder(100);
-
-	//设置操纵按钮大小
-	auto conSize=controllerImg->getContentSize();
-	controllerImg->setScaleX(visibleSize.width / conSize.width);
-	controllerImg->setScaleY(visibleSize.height / conSize.height);
-
-	//set move action of button
-	std::string buttonName= "Btn_up";
-	auto upBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(upBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_UP));
-	buttonName = "Btn_right";
-	auto rightBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(rightBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_RIGHT));
-	buttonName = "Btn_down";
-	auto downBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(downBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_DOWN));
-	buttonName = "Btn_left";
-	auto leftBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(leftBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_LEFT));
-
-	//attack action
-	buttonName = "Btn_bullet";
-	auto bulletBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(bulletBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_FIRE_BULLET));
-	buttonName = "Btn_bomb";
-	auto bombBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(bombBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_FIRE_BOMB));
-	buttonName = "Btn_slide";
-	auto slideBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(slideBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_SLIDE));
-	buttonName = "Btn_ultimate";
-	auto ultimateBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(ultimateBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_ULTIMATE));
-
-	//music and quit
-	buttonName = "Btn_quit";
-	auto quitBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(quitBtn)->addTouchEventListener(CC_CALLBACK_2(BaseLayer::returnToMainScene, this));
-	buttonName = "Btn_music";
-	auto musicBtn = seekFromRootByName(controllerImg, buttonName);
-	static_cast<Button*>(musicBtn)->addTouchEventListener(CC_CALLBACK_2(BaseLayer::turnOnBgMusic, this));
-
-	//set contack listener
-	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(BaseLayer::contactListen, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
-
-	//设置CD更新函数
-	auto func = [&](PlayerTank::PlayerAction _act)
-	{
-
-	};
-
-	m_currentPlayer->onAct = func;
-
+	//-----------------------------------------------------------------
+	this->setContactListener();
 	//-----------------------------------------------------------------
 	return true;
 }
@@ -157,7 +90,23 @@ void BaseLayer::returnToMainScene(Ref *pSender, Widget::TouchEventType _touchTyp
 
 void BaseLayer::refreshButtonCD(float dt)
 {
+	if (m_currentPlayer)
+	{
+		int* pCDArray;
+		int arrLen=0;
+		m_currentPlayer->getSkillCD(pCDArray,arrLen);
 
+		for (int i = 0; i < arrLen; i++)
+		{
+			if (pCDArray[i]>0)
+				pCDArray[i]--;
+
+			if (pCDArray[i] <= 0)
+			{
+
+			}
+		}
+	}
 }
 
 void BaseLayer::onMapMove(Vec2 _dir)
@@ -167,6 +116,100 @@ void BaseLayer::onMapMove(Vec2 _dir)
 
 	}
 }
+
+void BaseLayer::initPlayer()
+{
+	//set player
+	//warning:  ensure you have init map first before call this method
+	m_currentPlayer = PlayerTank::create(tankImgPath);
+	if (m_currentPlayer)
+	{
+		m_currentPlayer->setPosition(VisibleRect::center());
+		m_currentPlayer->getPhysicsBody()->setTag(PLAYER_TAG);
+		m_currentPlayer->setZOrder(TANK_Z_ORDER);
+
+		if (m_map != nullptr)	//地图初始化完成后，将坦克放到地图上
+		{
+			m_map->addChild(m_currentPlayer);
+		}
+		
+		//将地图滚动和坦克移动关联起来
+		m_currentPlayer->onMapMove = CC_CALLBACK_1(BaseLayer::onMapMove, this);
+
+		//玩家初始化完成之后，关联按钮事件
+		this->setButtonListener();
+	}
+}
+
+void BaseLayer::setButtonListener()
+{
+	auto visibleSize = VisibleRect::getVisibleRect().size;
+
+	//load controller
+	auto controllerImg = CSLoader::createNode(PlayerControllerPath);
+	if (controllerImg!=nullptr)//防御性，保证按钮文件加载成功后，执行后续操作
+	{
+		controllerImg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		controllerImg->setPosition(VisibleRect::center());
+		this->addChild(controllerImg);
+
+		//设置操纵按钮大小
+		auto conSize = controllerImg->getContentSize();
+		controllerImg->setScaleX(visibleSize.width / conSize.width);
+		controllerImg->setScaleY(visibleSize.height / conSize.height);
+
+		if (m_currentPlayer != nullptr)	//防御性，保证坦克初始化成功后，开始关联按钮响应事件
+		{
+			//set move action of button
+			std::string buttonName = "Btn_up";
+			auto upBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(upBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_UP));
+			buttonName = "Btn_right";
+			auto rightBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(rightBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_RIGHT));
+			buttonName = "Btn_down";
+			auto downBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(downBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_DOWN));
+			buttonName = "Btn_left";
+			auto leftBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(leftBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::move, m_currentPlayer, FTank::TankDirect::TD_LEFT));
+
+			//attack action
+			buttonName = "Btn_bullet";
+			auto bulletBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(bulletBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_FIRE_BULLET));
+			buttonName = "Btn_bomb";
+			auto bombBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(bombBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_FIRE_BOMB));
+			buttonName = "Btn_slide";
+			auto slideBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(slideBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_SLIDE));
+			buttonName = "Btn_ultimate";
+			auto ultimateBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(ultimateBtn)->addTouchEventListener(CC_CALLBACK_2(PlayerTank::act, m_currentPlayer, PlayerTank::PlayerAction::PA_ULTIMATE));
+
+			//music and quit
+			buttonName = "Btn_quit";
+			auto quitBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(quitBtn)->addTouchEventListener(CC_CALLBACK_2(BaseLayer::returnToMainScene, this));
+			buttonName = "Btn_music";
+			auto musicBtn = seekFromRootByName(controllerImg, buttonName);
+			static_cast<Button*>(musicBtn)->addTouchEventListener(CC_CALLBACK_2(BaseLayer::turnOnBgMusic, this));
+
+		}
+		
+	}
+	
+}
+
+void BaseLayer::setContactListener()
+{
+	//set contack listener
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(BaseLayer::contactListen, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+}
+
 bool BaseLayer::contactListen(const PhysicsContact& contact)
 {
 	auto tagA = contact.getShapeA()->getBody()->getTag();

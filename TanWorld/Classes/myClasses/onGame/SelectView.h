@@ -33,14 +33,17 @@ public:
 	// implement the "static create()" method manually
 	CREATE_FUNC(SelectView);
 
+	//get tableView point
+	cocos2d::extension::TableView*	getTableView(){ return m_chapterTable; }
 private:
 	//do not allowed to be accessed outside
 	SelectView();
 	~SelectView();
 
 	//member variables
-	int					m_gateNum;
-	cocos2d::Size		m_cellSize;
+	int										m_gateNum;
+	cocos2d::Size							m_cellSize;
+	cocos2d::extension::TableView*			m_chapterTable;
 };
 
 #endif // __SELECT_VIEW_H__

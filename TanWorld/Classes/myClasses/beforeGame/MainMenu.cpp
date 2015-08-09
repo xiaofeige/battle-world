@@ -62,7 +62,8 @@ bool MainMenu::init()
 	auto itemFeedBack = MenuItemFont::create("contact us!", CC_CALLBACK_1(MainMenu::menuFeedback, this));
 	auto menu = Menu::create(itemStart, itemFeedBack, nullptr);
 	menu->alignItemsHorizontallyWithPadding(200.0f);
-	menu->setPosition(VisibleRect::center());
+	auto menuPos = VisibleRect::center();
+	menu->setPosition(Vec2(menuPos.x,menuPos.y/2));
 	this->addChild(menu);
 	
 	return true;
@@ -70,11 +71,9 @@ bool MainMenu::init()
 void MainMenu::menuStart(cocos2d::Ref* pSender)
 {
 	auto gateSelectView = SelectView::create();
-	gateSelectView->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	gateSelectView->setPosition(VisibleRect::center());
-
-	auto s=gateSelectView->getContentSize();
 	this->addChild(gateSelectView);
+
+	gateSelectView->getTableView()->setPosition(VisibleRect::center());
 }
 
 void MainMenu::menuFeedback(cocos2d::Ref* pSender)
