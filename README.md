@@ -29,18 +29,16 @@ thirdly,when you finish what I mentioned above,you can start this project,howeve
 关卡：<br/>
 前面介绍了有一个BaseScene作为关卡场景的基类，基类中先实现场景通用的方法，在特定关卡中的初始化中添加额外的初始化代码，添加特有的方法，用这种方式实现扩展。<br/>
 关卡之间是如何关联起来的：  当前只有一个关卡，关联起来使用的是一个关卡控制器：<br/>
-<code>
-typedef struct controller
-{
-	const char*					chapterName;		//章节名称
-	const char*					chapterLookPath;	//章节预览图地址
-	function<BaseLayer*()>		callBack;			//章节调用器
-}ChapterController;
-static ChapterController chapters[] =
-{
-	{ "protect princess-apartment of CUG", "pic/chapterTest.png", [](){return Chapter1::create(); } }
-};
-</code>
+typedef struct controller<br/>
+{<br/>
+	const char*					chapterName;		//章节名称<br/>
+	const char*					chapterLookPath;	//章节预览图地址<br/>
+	function<BaseLayer*()>		callBack;			//章节调用器<br/>
+}ChapterController;<br/>
+static ChapterController chapters[] =<br/>
+{<br/>
+	{ "protect princess-apartment of CUG", "pic/chapterTest.png", [](){return Chapter1::create(); } }<br/>
+};<br/>
 当你做好一个关卡后，按照这种方式添加到这个数组中即可。<br/>
 <hr/>
 <hr/>
