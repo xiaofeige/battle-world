@@ -17,18 +17,19 @@ thirdly,when you finish what I mentioned above,you can start this project,howeve
 二：主菜单，用于用户选择开始游戏，游戏关卡，或者选择联系我们------->MainMenu.h<br/>
     关卡选择菜单--------------------------------------------------->selectView.h<br/>
 游戏中涉及到的：<br/>
-坦克的实现--------------------------------------------------------->tank.h
-子弹的实现--------------------------------------------------------->bullet.h
-游戏场景基类，抽出每个关卡都存在的公共部分------------------------->BaseScene.h
-游戏中AI机器坦克的管理--------------------------------------------->AISystem.h
+坦克的实现--------------------------------------------------------->tank.h<br/>
+子弹的实现--------------------------------------------------------->bullet.h<br/>
+游戏场景基类，抽出每个关卡都存在的公共部分------------------------->BaseScene.h<br/>
+游戏中AI机器坦克的管理--------------------------------------------->AISystem.h<br/>
 三：
-游戏数据处理会用到的库--------------------------------------------->GameHandleLib.h
-游戏屏幕适配简单处理类--------------------------------------------->VisibleRect.h
-游戏数据基础宏定义------------------------------------------------->baseDefine.h
+游戏数据处理会用到的库--------------------------------------------->GameHandleLib.h<br/>
+游戏屏幕适配简单处理类--------------------------------------------->VisibleRect.h<br/>
+游戏数据基础宏定义------------------------------------------------->baseDefine.h<br/>
 
-关卡：
-前面介绍了有一个BaseScene作为关卡场景的基类，基类中先实现场景通用的方法，在特定关卡中的初始化中添加额外的初始化代码，添加特有的方法，用这种方式实现扩展。
-关卡之间是如何关联起来的：  当前只有一个关卡，关联起来使用的是一个关卡控制器：
+关卡：<br/>
+前面介绍了有一个BaseScene作为关卡场景的基类，基类中先实现场景通用的方法，在特定关卡中的初始化中添加额外的初始化代码，添加特有的方法，用这种方式实现扩展。<br/>
+关卡之间是如何关联起来的：  当前只有一个关卡，关联起来使用的是一个关卡控制器：<br/>
+<code>
 typedef struct controller
 {
 	const char*					chapterName;		//章节名称
@@ -39,7 +40,8 @@ static ChapterController chapters[] =
 {
 	{ "protect princess-apartment of CUG", "pic/chapterTest.png", [](){return Chapter1::create(); } }
 };
-当你做好一个关卡后，按照这种方式添加到这个数组中即可。
-
-
-if you have a better idea,please don't forget to tell me,and if you can continue my job to finish this game I would be very appreciated^_^
+</code>
+当你做好一个关卡后，按照这种方式添加到这个数组中即可。<br/>
+<hr/>
+<hr/>
+if you have a better idea,please don't forget to tell me,and if you can continue my job to finish this game I would be very appreciated^_^<br/>
